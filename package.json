@@ -1,0 +1,30 @@
+{
+  "name": "recipe",
+  "version": "1.0.0",
+  "description": "recipe project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MoeTerani/Recipe.git"
+  },
+  "author": "Moe Terani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MoeTerani/Recipe/issues"
+  },
+  "homepage": "https://github.com/MoeTerani/Recipe#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^2.1.5",
+    "webpack-dev-server": "^3.3.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0"
+  }
+}
