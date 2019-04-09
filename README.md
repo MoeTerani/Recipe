@@ -1,6 +1,7 @@
 # Recipe
 
-Modules.
 Webpack.
 Babel 6.
+ES6 Modules.
 MVC
+axios 
