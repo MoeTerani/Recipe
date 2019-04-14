@@ -4,9 +4,10 @@ export const getInput = () => elements.searchInput.value;
 export const clearInput = () => {
   elements.searchInput.value = '';
 };
-export const clearResList = () => {
+export const clearResults = () => {
   // will remove all the li elements inside
   elements.searchResList.innerHTML = '';
+  elements.searchResPages.innerHTML = '';
 };
 //'Pasta with tomato and spinach'
 //solution to make the title a one liner.
@@ -49,7 +50,66 @@ const renderRecipe = recipe => {
     `;
   elements.searchResList.insertAdjacentHTML('beforeend', markup);
 };
+//type: 'prev' or 'next'
+//html5 data attribute
 
-export const renderResults = recipes => {
-  recipes.forEach(renderRecipe);
+const createButton = (page, type) => `
+    <button class="btn-inline results__btn--${type}" data-goto=${
+  type === 'prev' ? page - 1 : page + 1
+}>
+        <span>Page ${type === 'prev' ? page - 1 : page + 1}</span>
+        <svg class="search__icon">
+            <use href="img/icons.svg#icon-triangle-${
+              type === 'prev' ? 'left' : 'right'
+            }"></use>
+        </svg>
+    </button>
+
+    `;
+/*         <!-- related html code for easier transformation for "creatButton" function  
+                <button class="btn-inline results__btn--prev">
+                    <svg class="search__icon">
+                        <use href="img/icons.svg#icon-triangle-left"></use>
+                    </svg>
+                    <span>Page 1</span>
+                </button>
+                <button class="btn-inline results__btn--next">
+                    <span>Page 3</span>
+                    <svg class="search__icon">
+                        <use href="img/icons.svg#icon-triangle-right"></use>
+                    </svg>
+                </button>
+            --> */
+
+const renderButtons = (page, numResults, resPerPage) => {
+  // how to round up to next integer . ex: 4.5 will be 5, we alwxays need a integer number for pages.
+  const pages = Math.ceil(numResults / resPerPage);
+
+  let button;
+  if (page === 1 && pages > 1) {
+    // Only button to next page
+    button = createButton(page, 'next');
+  } else if (page < pages) {
+    // Both buttons- here we need two string to pass to the function to get both buttons so we use ``
+    button = `
+            ${createButton(page, 'prev')}
+            ${createButton(page, 'next')}
+        `;
+  } else if (page === pages && pages > 1) {
+    // Only button to previous page
+    button = createButton(page, 'prev');
+  }
+
+  elements.searchResPages.insertAdjacentHTML('afterbegin', button);
+};
+
+export const renderResults = (recipes, page = 1, resPerPage = 10) => {
+  // render results of currente page
+  const start = (page - 1) * resPerPage;
+  const end = page * resPerPage;
+
+  recipes.slice(start, end).forEach(renderRecipe);
+
+  // render page buttons
+  renderButtons(page, recipes.length, resPerPage);
 };
