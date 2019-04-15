@@ -18,6 +18,7 @@ console.log(`Using imported vriables ${add(5, 5)}`);
 // https://www.food2fork.com/api/search?key=302483c930b58460ecbba917f0ee3ce8&q=chicken%20breast&page=2
 
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import * as searchView from './views/SearchView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
@@ -28,6 +29,8 @@ import { elements, renderLoader, clearLoader } from './views/base';
  * -liked recipe
  */
 const state = {};
+
+/** Search controlller */
 
 const controlSearch = async () => {
   //Get the query from the view
@@ -65,3 +68,48 @@ elements.searchResPages.addEventListener('click', e => {
     searchView.renderResults(state.search.result, goToPage);
   }
 });
+
+/**Recipe Controller */
+
+const controlRecipe = async () => {
+  // Get ID from url
+  const id = window.location.hash.replace('#', '');
+
+  if (id) {
+    // Prepare UI for changes
+    recipeView.clearRecipe();
+    renderLoader(elements.recipe);
+
+    // Highlight selected search item
+    if (state.search) searchView.highlightSelected(id);
+
+    // Create new recipe object
+    state.recipe = new Recipe(id);
+
+    try {
+      // Get recipe data and parse ingredients
+      await state.recipe.getRecipe();
+      state.recipe.parseIngredients();
+
+      // Calculate servings and time
+      state.recipe.calcTime();
+      state.recipe.calcServings();
+
+      // Render recipe
+      clearLoader();
+      recipeView.renderRecipe(state.recipe, state.likes.isLiked(id));
+    } catch (err) {
+      console.log(err);
+      alert('Error processing recipe!');
+    }
+  }
+};
+
+/* we save the strings for these two event types into an array
+
+and then looped over them and call window.eventListener
+
+for each of them passing in the corresponding event.*/
+['hashchange', 'load'].forEach(event =>
+  window.addEventListener(event, controlRecipe)
+);
