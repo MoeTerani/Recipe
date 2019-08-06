@@ -19,8 +19,12 @@ console.log(`Using imported vriables ${add(5, 5)}`);
 
 import Search from './models/Search';
 import Recipe from './models/Recipe';
-import * as searchView from './views/SearchView';
-import * as recipeView from './views/recipeview';
+import List from './models/List';
+import Likes from './models/Likes';
+import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeView';
+import * as listView from './views/listView';
+import * as likesView from './views/likesView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 /** Global state of the app
@@ -98,7 +102,7 @@ const controlRecipe = async () => {
 
       // Render recipe
       clearLoader();
-      recipeView.renderRecipe(state.recipe, state.likes.isLiked(id));
+      recipeView.renderRecipe(state.recipe);
     } catch (err) {
       console.log(err);
       alert('Error processing recipe!');
